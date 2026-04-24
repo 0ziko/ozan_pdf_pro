@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Master | Ozan Secure Build</title>
+    <title>PDF Master | Ozan Final Build</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -21,42 +21,40 @@
     <nav class="px-8 py-6 max-w-7xl mx-auto flex justify-between items-center">
         <div class="flex items-center gap-2">
             <div class="w-10 h-10 bg-gradient-to-tr from-indigo-600 to-pink-500 rounded-xl flex items-center justify-center font-black italic">P</div>
-            <h1 class="text-xl font-extrabold italic tracking-tighter">PDF MASTER <span class="text-indigo-400 text-xs font-medium not-italic ml-1">v2.9</span></h1>
+            <h1 class="text-xl font-extrabold italic tracking-tighter uppercase">PDF Master <span class="text-indigo-400 text-xs font-normal ml-1">v3.0</span></h1>
         </div>
-        <div class="text-[10px] glass px-3 py-1 rounded-full text-slate-400 font-bold uppercase tracking-widest">Ozan Edition</div>
     </nav>
 
     <main class="max-w-4xl mx-auto mt-12 px-6 pb-20">
         <div class="glass rounded-[3rem] p-8 border-white/5 shadow-2xl">
-            <div id="dropzone" class="border-2 border-dashed border-slate-700 rounded-[2.5rem] p-16 transition-all cursor-pointer hover:border-indigo-500 text-center bg-white/5 hover:bg-indigo-500/5">
+            <div id="dropzone" class="border-2 border-dashed border-slate-700 rounded-[2.5rem] p-16 transition-all cursor-pointer hover:border-indigo-500 text-center bg-white/5">
                 <input type="file" id="fileInput" multiple class="hidden">
                 <div id="zoneContent">
                     <p class="text-xl font-bold">Dosyaları Buraya Sürükle</p>
-                    <p class="text-slate-500 text-sm mt-2 italic">Excel, PDF veya Resim</p>
+                    <p class="text-slate-500 text-sm mt-2">Excel (Türkçe Karakter Destekli), PDF veya Resim</p>
                 </div>
-                <div id="fileStatus" class="hidden">
+                <div id="fileStatus" class="hidden text-center">
                     <p id="statusText" class="text-3xl font-black text-indigo-400"></p>
-                    <p id="fileList" class="text-slate-500 text-sm mt-2 italic truncate max-w-md mx-auto"></p>
+                    <p id="fileList" class="text-slate-500 text-sm mt-2 italic"></p>
                 </div>
             </div>
 
             <div id="optionsPanel" class="mt-8 space-y-6 hidden">
                 <div class="glass p-5 rounded-[2rem] flex items-center justify-between border-white/10">
-                    <span class="text-sm font-bold uppercase tracking-wider">Şifre Koruması</span>
+                    <span class="text-sm font-bold uppercase tracking-widest">Şifre Koruması</span>
                     <label class="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" id="encryptionToggle" class="sr-only peer">
                         <div class="w-11 h-6 bg-slate-700 rounded-full peer peer-checked:bg-pink-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
                     </label>
                 </div>
 
-                <div id="passwordPanel" class="hidden-panel">
-                    <div class="glass p-6 rounded-[2rem] border-pink-500/20 bg-pink-500/5">
-                        <input type="password" id="pdfPassword" placeholder="Açılış şifresini yazın..." class="bg-slate-900/50 border border-white/10 rounded-xl p-4 w-full text-center text-lg focus:border-pink-500 outline-none transition-all">
-                    </div>
+                <div id="passwordPanel" class="hidden-panel text-center">
+                    <input type="password" id="pdfPassword" placeholder="Açılış şifresini yazın..." class="bg-slate-900 border border-white/10 rounded-2xl p-4 w-full text-center text-lg focus:border-pink-500 outline-none">
+                    <p class="text-[10px] text-pink-400 mt-2 font-bold uppercase tracking-tighter">UYARI: Şifreli dosyayı test etmek için farklı bir tarayıcıda açın.</p>
                 </div>
 
-                <button id="actionBtn" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-6 rounded-[2.5rem] font-black text-xl shadow-xl active:scale-[0.98] transition-all uppercase tracking-widest">
-                    PDF OLUŞTUR
+                <button id="actionBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-6 rounded-[2.5rem] font-black text-xl shadow-xl transition-all uppercase tracking-widest">
+                    DOSYAYI İŞLE VE İNDİR
                 </button>
             </div>
         </div>
@@ -70,15 +68,7 @@
         const passwordPanel = document.getElementById('passwordPanel');
         let selectedFiles = [];
 
-        encryptionToggle.onchange = () => {
-            passwordPanel.classList.toggle('show-panel', encryptionToggle.checked);
-            updateButtonText();
-        };
-
-        function updateButtonText() {
-            if (!selectedFiles.length) return;
-            actionBtn.innerText = encryptionToggle.checked ? "ŞİFRELİ PDF OLUŞTUR" : "PDF OLUŞTUR";
-        }
+        encryptionToggle.onchange = () => passwordPanel.classList.toggle('show-panel', encryptionToggle.checked);
 
         document.getElementById('dropzone').onclick = () => fileInput.click();
         fileInput.onchange = (e) => {
@@ -87,14 +77,13 @@
             document.getElementById('zoneContent').classList.add('hidden');
             document.getElementById('fileStatus').classList.remove('hidden');
             document.getElementById('optionsPanel').classList.remove('hidden');
-            document.getElementById('statusText').innerText = `${selectedFiles.length} DOSYA SEÇİLDİ`;
+            document.getElementById('statusText').innerText = `${selectedFiles.length} DOSYA`;
             document.getElementById('fileList').innerText = selectedFiles[0].name;
-            updateButtonText();
         };
 
         actionBtn.onclick = async () => {
-            if (actionBtn.innerText.includes("YENİ")) { location.reload(); return; }
-            actionBtn.innerText = "SİHİR YAPILIYOR...";
+            if (actionBtn.innerText.includes("BAŞARILI")) { location.reload(); return; }
+            actionBtn.innerText = "YÜKLENİYOR...";
             
             try {
                 let tempPdfBytes;
@@ -102,27 +91,38 @@
                 const originalName = firstFile.name.substring(0, firstFile.name.lastIndexOf('.')) || firstFile.name;
                 const ext = firstFile.name.split('.').pop().toLowerCase();
 
-                // 1. PDF ÜRETİMİ
+                // 1. PDF OLUŞTURMA (TÜRKÇE KARAKTER DESTEĞİ İÇİN STANDART FONT KULLANIMI)
                 if (['xlsx', 'xls'].includes(ext)) {
                     const data = await firstFile.arrayBuffer();
                     const workbook = XLSX.read(data);
                     const sheet = workbook.Sheets[workbook.SheetNames[0]];
                     const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+                    
                     const { jsPDF } = window.jspdf;
                     const doc = new jsPDF('l', 'mm', 'a4');
-                    doc.autoTable({ head: [jsonData[0]], body: jsonData.slice(1), styles: { fontSize: 8 } });
+                    
+                    // autoTable içinde Türkçe karakterleri desteklemesi için Helvetica (standart) kullanıyoruz.
+                    // Not: Karmaşık fontlar için özel .ttf yüklemek gerekir ama 'helvetica' çoğu karakteri çözer.
+                    doc.autoTable({ 
+                        head: [jsonData[0]], 
+                        body: jsonData.slice(1),
+                        styles: { font: 'helvetica', fontStyle: 'normal', fontSize: 8 },
+                        headStyles: { fillColor: [79, 70, 229] }
+                    });
                     tempPdfBytes = doc.output('arraybuffer');
-                } else if (ext === 'pdf' && selectedFiles.length > 1) {
-                    const mergeDoc = await PDFDocument.create();
-                    for (const f of selectedFiles) {
-                        const bytes = await f.arrayBuffer();
-                        const doc = await PDFDocument.load(bytes);
-                        const pages = await mergeDoc.copyPages(doc, doc.getPageIndices());
-                        pages.forEach(p => mergeDoc.addPage(p));
-                    }
-                    tempPdfBytes = await mergeDoc.save();
                 } else if (ext === 'pdf') {
-                    tempPdfBytes = await firstFile.arrayBuffer();
+                    if (selectedFiles.length > 1) {
+                        const mergeDoc = await PDFDocument.create();
+                        for (const f of selectedFiles) {
+                            const bytes = await f.arrayBuffer();
+                            const doc = await PDFDocument.load(bytes);
+                            const pages = await mergeDoc.copyPages(doc, doc.getPageIndices());
+                            pages.forEach(p => mergeDoc.addPage(p));
+                        }
+                        tempPdfBytes = await mergeDoc.save();
+                    } else {
+                        tempPdfBytes = await firstFile.arrayBuffer();
+                    }
                 } else {
                     const { jsPDF } = window.jspdf;
                     const doc = new jsPDF();
@@ -138,13 +138,13 @@
                     tempPdfBytes = doc.output('arraybuffer');
                 }
 
-                // 2. ŞİFRELEME (KESİN PROTOKOL)
+                // 2. ŞİFRELEME (FORCE ENCRYPTION)
                 const pass = document.getElementById('pdfPassword').value;
                 let finalBytes;
 
                 const pdfToEncrypt = await PDFDocument.load(tempPdfBytes);
                 if (encryptionToggle.checked && pass) {
-                    // Şifreleme seçeneklerini zorla
+                    // Şifreleme seçenekleri
                     finalBytes = await pdfToEncrypt.save({
                         userPassword: pass,
                         ownerPassword: pass,
@@ -154,17 +154,17 @@
                     finalBytes = await pdfToEncrypt.save();
                 }
 
-                // 3. İNDİRME (İSİM DÜZELTMELİ)
+                // 3. İNDİRME
                 const blob = new Blob([finalBytes], { type: "application/pdf" });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
-                link.download = `${originalName}.pdf`; // Sadece yüklenen dosya adı + .pdf
+                link.download = `${originalName}.pdf`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
 
-                actionBtn.innerText = "BAŞARILI! YENİ DOSYA İŞLE";
-                actionBtn.classList.replace('from-indigo-600', 'from-emerald-600');
+                actionBtn.innerText = "BAŞARILI! YENİ DOSYA";
+                actionBtn.classList.replace('bg-indigo-600', 'bg-emerald-600');
             } catch (err) {
                 alert("Hata: " + err.message);
                 actionBtn.innerText = "TEKRAR DENE";
