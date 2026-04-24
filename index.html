@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Master | Pro Edition</title>
+    <title>PDF Master AI | Ozan Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -11,76 +11,56 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0f172a; color: white; overflow-x: hidden; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0f172a; color: white; }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .gradient-text { background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .toggle-checkbox:checked + .toggle-label { background-color: #6366f1; }
-        .toggle-checkbox:checked + .toggle-label:before { transform: translateX(20px); }
-        .hidden-panel { max-height: 0; opacity: 0; overflow: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .show-panel { max-height: 200px; opacity: 1; margin-top: 1.5rem; }
+        .hidden-panel { max-height: 0; opacity: 0; overflow: hidden; transition: all 0.4s ease-out; }
+        .show-panel { max-height: 200px; opacity: 1; margin-top: 1rem; }
     </style>
 </head>
 <body class="min-h-screen">
     <nav class="px-8 py-6 flex justify-between items-center max-w-7xl mx-auto">
         <div class="flex items-center gap-2">
-            <div class="w-10 h-10 bg-gradient-to-tr from-indigo-600 to-pink-500 rounded-xl flex items-center justify-center font-black shadow-lg shadow-indigo-500/20">P</div>
-            <h1 class="text-xl font-extrabold tracking-tighter italic">PDF MASTER <span class="text-indigo-400 text-xs not-italic font-medium ml-1">v2.5</span></h1>
+            <div class="w-10 h-10 bg-gradient-to-tr from-indigo-600 to-pink-500 rounded-xl flex items-center justify-center font-black">P</div>
+            <h1 class="text-xl font-extrabold italic">PDF MASTER <span class="text-indigo-400 text-xs font-normal">SECURE</span></h1>
         </div>
-        <div class="glass px-4 py-2 rounded-full text-[10px] font-bold text-slate-400 uppercase tracking-widest border-indigo-500/20">Ozan's Exclusive Edition</div>
     </nav>
 
-    <main class="max-w-4xl mx-auto mt-8 px-6 pb-20">
-        <div class="text-center mb-10">
-            <h2 class="text-5xl font-extrabold mb-4 leading-tight tracking-tight">Güçlü. Hızlı. <br><span class="gradient-text">Kusursuz PDF.</span></h2>
-            <p class="text-slate-400 font-light">Dosyalarını sürükle ve profesyonel araçları kullanmaya başla.</p>
-        </div>
-
+    <main class="max-w-4xl mx-auto mt-12 px-6 pb-20">
         <div class="glass rounded-[3rem] p-8 shadow-2xl border-white/5">
-            <div id="dropzone" class="border-2 border-dashed border-slate-700 rounded-[2.5rem] p-16 transition-all cursor-pointer hover:border-indigo-500 hover:bg-indigo-500/5 text-center group">
+            <div id="dropzone" class="border-2 border-dashed border-slate-700 rounded-[2.5rem] p-16 transition-all cursor-pointer hover:border-indigo-500 text-center">
                 <input type="file" id="fileInput" multiple class="hidden">
                 <div id="zoneContent">
-                    <div class="w-16 h-16 bg-slate-800 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                        <svg class="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                    </div>
-                    <p class="text-xl font-bold">Dosyaları buraya bırak veya seç</p>
-                    <p class="text-slate-500 text-sm mt-2">Excel, PDF, JPG veya PNG</p>
+                    <p class="text-xl font-bold">Dosyaları Buraya Sürükle</p>
+                    <p class="text-slate-500 text-sm mt-2 italic text-pink-400 font-bold">PDF, Excel veya Resim</p>
                 </div>
-                <div id="fileStatus" class="hidden animate-pulse">
+                <div id="fileStatus" class="hidden">
                     <p id="statusText" class="text-3xl font-black text-indigo-400 tracking-tighter"></p>
-                    <p id="fileList" class="text-slate-500 text-sm mt-2 italic truncate max-w-md mx-auto"></p>
+                    <p id="fileList" class="text-slate-500 text-sm mt-1 truncate max-w-xs mx-auto italic"></p>
                 </div>
             </div>
 
             <div id="optionsPanel" class="mt-8 space-y-6 hidden">
-                <div class="flex flex-col gap-4">
-                    
-                    <div class="glass p-5 rounded-[2rem] flex items-center justify-between border-white/10">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 bg-pink-500/10 rounded-full flex items-center justify-center text-pink-500">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                            </div>
-                            <div>
-                                <h4 class="text-sm font-bold">PDF Şifreleme</h4>
-                                <p class="text-[11px] text-slate-500">Dosyaya erişim kısıtlaması ekle</p>
-                            </div>
+                <div class="glass p-5 rounded-[2rem] flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-indigo-500/10 rounded-full flex items-center justify-center text-indigo-500">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                         </div>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="encryptionToggle" class="sr-only peer">
-                            <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
-                        </label>
+                        <h4 class="text-sm font-bold">PDF Şifreleme Kilidi</h4>
                     </div>
-
-                    <div id="passwordPanel" class="hidden-panel">
-                        <div class="glass p-6 rounded-[2rem] border-pink-500/20 bg-pink-500/5">
-                            <label class="text-[10px] font-black text-pink-400 uppercase tracking-[0.2em] mb-2 block ml-1 text-center">Açılış Şifresini Belirle</label>
-                            <input type="password" id="pdfPassword" placeholder="••••••••" class="bg-slate-900/50 border border-white/10 rounded-xl p-4 w-full text-center text-lg tracking-widest focus:border-pink-500 outline-none transition-all placeholder:text-slate-700">
-                        </div>
-                    </div>
-
-                    <button id="actionBtn" class="w-full bg-gradient-to-r from-indigo-600 via-violet-600 to-pink-600 text-white py-6 rounded-[2rem] font-black text-xl shadow-2xl shadow-indigo-500/20 active:scale-[0.98] transition-all uppercase tracking-widest">
-                        SİHRİ BAŞLAT
-                    </button>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="encryptionToggle" class="sr-only peer">
+                        <div class="w-11 h-6 bg-slate-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-pink-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                    </label>
                 </div>
+
+                <div id="passwordPanel" class="hidden-panel">
+                    <input type="password" id="pdfPassword" placeholder="Açılış şifresi belirle..." class="bg-slate-900 border border-white/10 rounded-2xl p-4 w-full text-center text-lg focus:border-pink-500 outline-none">
+                </div>
+
+                <button id="actionBtn" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-6 rounded-[2rem] font-black text-xl shadow-xl active:scale-95 transition-all uppercase tracking-widest">
+                    İŞLEMİ BAŞLAT
+                </button>
             </div>
         </div>
     </main>
@@ -94,77 +74,45 @@
         const passwordPanel = document.getElementById('passwordPanel');
         let selectedFiles = [];
 
-        // Toggle ve Buton Metni Kontrolü
+        // UI Kontrolleri
         encryptionToggle.onchange = () => {
-            if (encryptionToggle.checked) {
-                passwordPanel.classList.add('show-panel');
-            } else {
-                passwordPanel.classList.remove('show-panel');
-            }
+            passwordPanel.classList.toggle('show-panel', encryptionToggle.checked);
             updateButtonText();
         };
 
         function updateButtonText() {
-            if (selectedFiles.length === 0) return;
-            const isEnc = encryptionToggle.checked;
+            if (!selectedFiles.length) return;
             const ext = selectedFiles[0].name.split('.').pop().toLowerCase();
-            let baseText = "";
-
-            if (ext === 'pdf') {
-                baseText = selectedFiles.length > 1 ? "PDF'LERİ BİRLEŞTİR" : "SAYFALARI BÖL";
-            } else if (['xlsx', 'xls'].includes(ext)) {
-                baseText = "EXCEL'DEN PDF'E";
-            } else {
-                baseText = "RESİMLERİ PDF YAP";
-            }
-
-            actionBtn.innerText = isEnc ? `${baseText} VE ŞİFRELE` : baseText;
+            let text = (ext === 'pdf' && selectedFiles.length > 1) ? "PDF'LERİ BİRLEŞTİR" : 
+                       (ext === 'xlsx' || ext === 'xls') ? "EXCEL'DEN PDF YAP" : "PDF'E DÖNÜŞTÜR";
+            
+            if (encryptionToggle.checked) text += " VE ŞİFRELE";
+            actionBtn.innerText = text;
         }
 
         dropzone.onclick = () => fileInput.click();
-        fileInput.onchange = (e) => handleFiles(e.target.files);
-
-        function handleFiles(files) {
-            selectedFiles = Array.from(files);
-            if (selectedFiles.length === 0) return;
-
+        fileInput.onchange = (e) => {
+            selectedFiles = Array.from(e.target.files);
+            if (!selectedFiles.length) return;
             document.getElementById('zoneContent').classList.add('hidden');
             document.getElementById('fileStatus').classList.remove('hidden');
             document.getElementById('optionsPanel').classList.remove('hidden');
-            
-            document.getElementById('statusText').innerText = `${selectedFiles.length} DOSYA HAZIR`;
+            document.getElementById('statusText').innerText = `${selectedFiles.length} DOSYA SEÇİLDİ`;
             document.getElementById('fileList').innerText = selectedFiles.map(f => f.name).join(', ');
             updateButtonText();
-        }
+        };
 
-        async function secureAndSave(pdfDoc, fileName) {
-            const isEnc = encryptionToggle.checked;
-            const password = document.getElementById('pdfPassword').value;
-            let finalBytes;
-
-            if (isEnc && password) {
-                const pdfBytes = await pdfDoc.save();
-                const encDoc = await PDFDocument.load(pdfBytes);
-                finalBytes = await encDoc.save({ userPassword: password, ownerPassword: password });
-            } else {
-                finalBytes = await pdfDoc.save();
-            }
-
-            const blob = new Blob([finalBytes], { type: "application/pdf" });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = fileName;
-            link.click();
-        }
-
+        // ANA İŞLEM FONKSİYONU
         actionBtn.onclick = async () => {
             if (actionBtn.innerText.includes("YENİ")) { location.reload(); return; }
-            actionBtn.innerText = "İŞLENİYOR...";
+            actionBtn.innerText = "SİHİR YAPILIYOR...";
+            
             const firstFile = selectedFiles[0];
             const ext = firstFile.name.split('.').pop().toLowerCase();
+            let finalPdf;
 
             try {
-                let workingPdf;
+                // 1. AŞAMA: PDF Verisini Oluştur
                 if (['xlsx', 'xls'].includes(ext)) {
                     const data = await firstFile.arrayBuffer();
                     const workbook = XLSX.read(data);
@@ -172,23 +120,20 @@
                     const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
                     const { jsPDF } = window.jspdf;
                     const doc = new jsPDF('l', 'mm', 'a4');
-                    doc.autoTable({ head: [jsonData[0]], body: jsonData.slice(1), styles: { fontSize: 7 } });
-                    workingPdf = await PDFDocument.load(doc.output('arraybuffer'));
-                } else if (ext === 'pdf' && selectedFiles.length > 1) {
-                    workingPdf = await PDFDocument.create();
+                    doc.autoTable({ head: [jsonData[0]], body: jsonData.slice(1), styles: { fontSize: 8 } });
+                    const pdfArray = doc.output('arraybuffer');
+                    finalPdf = await PDFDocument.load(pdfArray);
+                } 
+                else if (ext === 'pdf') {
+                    finalPdf = await PDFDocument.create();
                     for (const f of selectedFiles) {
                         const bytes = await f.arrayBuffer();
-                        const pdf = await PDFDocument.load(bytes);
-                        const copiedPages = await workingPdf.copyPages(pdf, pdf.getPageIndices());
-                        copiedPages.forEach(p => workingPdf.addPage(p));
+                        const doc = await PDFDocument.load(bytes);
+                        const pages = await finalPdf.copyPages(doc, doc.getPageIndices());
+                        pages.forEach(p => finalPdf.addPage(p));
                     }
-                } else if (ext === 'pdf' && selectedFiles.length === 1) {
-                    const bytes = await firstFile.arrayBuffer();
-                    const pdf = await PDFDocument.load(bytes);
-                    workingPdf = await PDFDocument.create();
-                    const pages = await workingPdf.copyPages(pdf, pdf.getPageIndices());
-                    pages.forEach(p => workingPdf.addPage(p));
-                } else {
+                }
+                else {
                     const { jsPDF } = window.jspdf;
                     const doc = new jsPDF();
                     for (let i = 0; i < selectedFiles.length; i++) {
@@ -200,14 +145,32 @@
                         if (i > 0) doc.addPage();
                         doc.addImage(img, 'JPEG', 10, 10, 190, 260);
                     }
-                    workingPdf = await PDFDocument.load(doc.output('arraybuffer'));
+                    finalPdf = await PDFDocument.load(doc.output('arraybuffer'));
                 }
 
-                await secureAndSave(workingPdf, "ozan_pdf_master.pdf");
+                // 2. AŞAMA: Şifreleme ve Kaydetme
+                const pass = document.getElementById('pdfPassword').value;
+                let finalBytes;
+                
+                if (encryptionToggle.checked && pass) {
+                    // pdf-lib ile şifreleme uygula
+                    finalBytes = await finalPdf.save({ userPassword: pass, ownerPassword: pass });
+                } else {
+                    finalBytes = await finalPdf.save();
+                }
+
+                // 3. AŞAMA: İndirme
+                const blob = new Blob([finalBytes], { type: "application/pdf" });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = "OZAN_MASTER_RESULT.pdf";
+                link.click();
+
                 actionBtn.innerText = "BAŞARILI! YENİ DOSYA İŞLE";
-                actionBtn.className = actionBtn.className.replace('from-indigo-600', 'from-emerald-600');
-            } catch (e) {
-                alert("Hata oluştu: " + e.message);
+                actionBtn.classList.replace('from-indigo-600', 'from-emerald-600');
+            } catch (err) {
+                console.error(err);
+                alert("Hata: " + err.message);
                 actionBtn.innerText = "TEKRAR DENE";
             }
         };
