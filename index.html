@@ -98,7 +98,7 @@
     </main>
 
     <script>
-        const { PDFDocument } = PDFLib;
+       const { PDFDocument } = PDFLib;
         const fileInput = document.getElementById('fileInput');
         const dropzone = document.getElementById('dropzone');
         const zoneContent = document.getElementById('zoneContent');
@@ -111,7 +111,6 @@
 
         dropzone.onclick = () => fileInput.click();
 
-        // Drag & Drop efektleri
         ['dragenter', 'dragover'].forEach(name => {
             dropzone.addEventListener(name, (e) => { e.preventDefault(); dropzone.classList.add('drop-zone-active'); });
         });
@@ -151,7 +150,7 @@
         }
 
         actionBtn.onclick = async () => {
-            actionBtn.innerText = "İŞLENİYOR...";
+            actionBtn.innerText = "SİHİR YAPILIYOR...";
             const firstFile = selectedFiles[0];
             const ext = firstFile.name.split('.').pop().toLowerCase();
             const password = document.getElementById('pdfPassword').value;
@@ -165,6 +164,7 @@
                         if(i > 0) doc.addPage();
                         doc.addImage(imgData, 'JPEG', 10, 10, 180, 240);
                     }
+                    // BURASI DOSYAYI İNDİRİR:
                     doc.save("master_export.pdf");
                 } 
                 else if (ext === 'pdf' && selectedFiles.length > 1) {
@@ -176,6 +176,7 @@
                         pages.forEach(p => mergedPdf.addPage(p));
                     }
                     const bytes = await mergedPdf.save();
+                    // BURASI DOSYAYI İNDİRİR:
                     download(bytes, "master_merged.pdf", "application/pdf");
                 }
                 else if (ext === 'pdf' && selectedFiles.length === 1) {
@@ -187,18 +188,16 @@
                     const pages = await newPdf.copyPages(pdf, Array.from({length: end-start+1}, (_, i) => start-1+i));
                     pages.forEach(p => newPdf.addPage(p));
                     const bytes = await newPdf.save();
+                    // BURASI DOSYAYI İNDİRİR:
                     download(bytes, "master_split.pdf", "application/pdf");
                 }
             } catch (err) {
-                if (err.message.includes('password')) {
-                    document.getElementById('passwordArea').classList.remove('hidden');
-                    alert("Şifre gerekli!");
-                } else {
-                    alert("Hata: " + err.message);
-                }
+                alert("Hata: " + err.message);
             }
-            actionBtn.innerText = "BAŞARILI!";
-            setTimeout(() => handleFiles(selectedFiles), 2000);
+            actionBtn.innerText = "İNDİRİLDİ!";
+            setTimeout(() => {
+                actionBtn.innerText = "YENİ DOSYA İŞLE";
+            }, 3000);
         };
 
         function readFile(file) {
