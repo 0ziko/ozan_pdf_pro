@@ -7,6 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://unpkg.com/downloadjs@1.4.7/download.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -21,192 +23,103 @@
 <body class="overflow-x-hidden">
     <div class="fixed top-0 -left-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
     <div class="fixed top-0 -right-4 w-72 h-72 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" style="animation-delay: 2s"></div>
-    <div class="fixed -bottom-8 left-20 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" style="animation-delay: 4s"></div>
-
+    
     <nav class="relative z-10 px-8 py-6 flex justify-between items-center max-w-7xl mx-auto">
         <div class="flex items-center gap-2">
-            <div class="w-10 h-10 bg-gradient-to-tr from-indigo-600 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
+            <div class="w-10 h-10 bg-gradient-to-tr from-indigo-600 to-pink-500 rounded-xl flex items-center justify-center">
                 <span class="text-white font-black">P</span>
             </div>
             <h1 class="text-xl font-extrabold tracking-tight">PDF<span class="text-indigo-400">MASTER</span></h1>
         </div>
-        <div class="glass px-4 py-2 rounded-full text-xs font-semibold tracking-widest text-slate-400 uppercase">
-            Ozan's Exclusive Edition
-        </div>
+        <div class="glass px-4 py-2 rounded-full text-[10px] font-bold tracking-widest text-slate-400 uppercase">PRO EDITION</div>
     </nav>
 
-    <main class="relative z-10 max-w-4xl mx-auto mt-16 px-6 pb-20">
-        <header class="text-center mb-12">
-            <h2 class="text-5xl md:text-6xl font-extrabold mb-4 leading-tight">
-                PDF İşlerini <br><span class="gradient-text">Yapay Zeka Hızında</span> Çöz.
-            </h2>
-            <p class="text-slate-400 text-lg max-w-xl mx-auto">
-                Güvenli, hızlı ve tamamen tarayıcı tabanlı. Dosyaların asla cihazından ayrılmaz.
-            </p>
-        </header>
-
-        <div class="glass rounded-[2.5rem] p-4 md:p-8 transition-all">
-            <div id="dropzone" class="relative border-2 border-dashed border-slate-700 rounded-[2rem] p-16 text-center transition-all cursor-pointer hover:bg-white/5 hover:border-slate-500 group">
-                <input type="file" id="fileInput" multiple class="hidden">
+    <main class="relative z-10 max-w-4xl mx-auto mt-16 px-6 pb-20 text-center">
+        <h2 class="text-5xl font-extrabold mb-4 leading-tight">Excel ve Resimleri <br><span class="gradient-text">PDF'e Dönüştür</span></h2>
+        
+        <div class="glass rounded-[2.5rem] p-6 mt-12 transition-all">
+            <div id="dropzone" class="border-2 border-dashed border-slate-700 rounded-[2rem] p-16 transition-all cursor-pointer hover:border-indigo-500 group">
+                <input type="file" id="fileInput" multiple class="hidden" accept=".pdf,.jpg,.jpeg,.png,.xlsx,.xls">
                 <div id="zoneContent">
-                    <div class="w-20 h-20 bg-slate-800 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform shadow-2xl">
-                        <svg class="w-10 h-10 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"></path></svg>
+                    <div class="w-16 h-16 bg-slate-800 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                        <svg class="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                     </div>
-                    <p class="text-xl font-bold mb-2">Dosyaları Buraya Bırak</p>
-                    <p class="text-slate-500 text-sm">PDF veya Resim dosyası seçebilirsin</p>
+                    <p class="text-lg font-bold">Dosyayı Buraya Bırak</p>
+                    <p class="text-slate-500 text-xs">Excel, Resim veya PDF</p>
                 </div>
                 <div id="fileInfo" class="hidden">
-                    <p id="fileCountText" class="text-2xl font-black text-indigo-400"></p>
-                    <p class="text-slate-400">Dosya işlenmeye hazır</p>
+                    <p id="fileCountText" class="text-2xl font-black text-indigo-400 mb-2"></p>
+                    <p class="text-slate-400 text-sm" id="fileNameList"></p>
                 </div>
             </div>
 
-            <div id="passwordArea" class="hidden mt-6 bg-red-500/10 border border-red-500/20 p-6 rounded-2xl">
-                <p class="text-red-400 font-bold mb-3 flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
-                    Şifreli Dosya Tespit Edildi
-                </p>
-                <input type="password" id="pdfPassword" placeholder="Dosya şifresini girin..." class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-4 text-white outline-none focus:border-indigo-500 transition-colors">
-            </div>
-
-            <div id="controls" class="mt-8 space-y-4 hidden">
-                <div class="grid grid-cols-2 gap-4" id="splitInputs">
-                    <div class="space-y-1">
-                        <label class="text-[10px] uppercase tracking-widest text-slate-500 ml-2">Başlangıç</label>
-                        <input type="number" id="startPage" value="1" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
-                    </div>
-                    <div class="space-y-1">
-                        <label class="text-[10px] uppercase tracking-widest text-slate-500 ml-2">Bitiş</label>
-                        <input type="number" id="endPage" value="1" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
-                    </div>
-                </div>
-                <button id="actionBtn" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-5 rounded-2xl font-black text-lg hover:shadow-2xl hover:shadow-indigo-500/40 transition-all active:scale-[0.98]">
-                    SİHRİ BAŞLAT
+            <div id="controls" class="mt-8 hidden">
+                <button id="actionBtn" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-5 rounded-2xl font-black text-lg shadow-xl shadow-indigo-500/20 active:scale-95 transition-all">
+                    DÖNÜŞTÜRMEYİ BAŞLAT
                 </button>
             </div>
         </div>
-
-        <footer class="mt-20 text-center">
-            <div class="inline-flex items-center gap-3 glass px-6 py-3 rounded-full">
-                <span class="relative flex h-3 w-3">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-                </span>
-                <span class="text-xs font-bold text-slate-300 uppercase tracking-tighter">Tüm Sistemler Aktif - Yerel İşleme Modu</span>
-            </div>
-        </footer>
     </main>
 
     <script>
-      const { PDFDocument } = PDFLib;
         const fileInput = document.getElementById('fileInput');
         const dropzone = document.getElementById('dropzone');
-        const zoneContent = document.getElementById('zoneContent');
         const fileInfo = document.getElementById('fileInfo');
-        const fileCountText = document.getElementById('fileCountText');
         const controls = document.getElementById('controls');
         const actionBtn = document.getElementById('actionBtn');
-
         let selectedFiles = [];
 
         dropzone.onclick = () => fileInput.click();
-
-        ['dragenter', 'dragover'].forEach(name => {
-            dropzone.addEventListener(name, (e) => { e.preventDefault(); dropzone.classList.add('drop-zone-active'); });
-        });
-        ['dragleave', 'drop'].forEach(name => {
-            dropzone.addEventListener(name, (e) => { e.preventDefault(); dropzone.classList.remove('drop-zone-active'); });
-        });
-
-        dropzone.addEventListener('drop', (e) => {
-            fileInput.files = e.dataTransfer.files;
-            handleFiles(e.dataTransfer.files);
-        });
-
+        dropzone.ondragover = (e) => { e.preventDefault(); dropzone.classList.add('drop-zone-active'); };
+        dropzone.ondragleave = () => dropzone.classList.remove('drop-zone-active');
+        dropzone.ondrop = (e) => { e.preventDefault(); handleFiles(e.dataTransfer.files); };
         fileInput.onchange = (e) => handleFiles(e.target.files);
 
         function handleFiles(files) {
             selectedFiles = Array.from(files);
             if (selectedFiles.length > 0) {
-                zoneContent.classList.add('hidden');
+                document.getElementById('zoneContent').classList.add('hidden');
                 fileInfo.classList.remove('hidden');
-                fileCountText.innerText = `${selectedFiles.length} DOSYA SEÇİLDİ`;
                 controls.classList.remove('hidden');
-                
-                const firstFile = selectedFiles[0];
-                const ext = firstFile.name.split('.').pop().toLowerCase();
-                
-                if (ext !== 'pdf') {
-                    document.getElementById('splitInputs').classList.add('hidden');
-                    actionBtn.innerText = "PDF'E DÖNÜŞTÜR";
-                } else if (selectedFiles.length > 1) {
-                    document.getElementById('splitInputs').classList.add('hidden');
-                    actionBtn.innerText = "PDF'LERİ BİRLEŞTİR";
-                } else {
-                    document.getElementById('splitInputs').classList.remove('hidden');
-                    actionBtn.innerText = "SAYFALARI BÖL";
-                }
+                document.getElementById('fileCountText').innerText = `${selectedFiles.length} DOSYA HAZIR`;
+                document.getElementById('fileNameList').innerText = selectedFiles[0].name;
             }
         }
 
         actionBtn.onclick = async () => {
             actionBtn.innerText = "SİHİR YAPILIYOR...";
-            const firstFile = selectedFiles[0];
-            const ext = firstFile.name.split('.').pop().toLowerCase();
-            const password = document.getElementById('pdfPassword').value;
+            const file = selectedFiles[0];
+            const ext = file.name.split('.').pop().toLowerCase();
 
             try {
-                if (['jpg', 'jpeg', 'png'].includes(ext)) {
+                if (ext === 'xlsx' || ext === 'xls') {
+                    const data = await file.arrayBuffer();
+                    const workbook = XLSX.read(data);
+                    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
                     const { jsPDF } = window.jspdf;
                     const doc = new jsPDF();
-                    for(let i=0; i<selectedFiles.length; i++) {
-                        const imgData = await readFile(selectedFiles[i]);
-                        if(i > 0) doc.addPage();
-                        doc.addImage(imgData, 'JPEG', 10, 10, 180, 240);
-                    }
-                    // BURASI DOSYAYI İNDİRİR:
-                    doc.save("master_export.pdf");
+                    doc.autoTable({ head: [jsonData[0]], body: jsonData.slice(1) });
+                    doc.save(file.name.replace(/\.[^/.]+$/, "") + ".pdf");
                 } 
-                else if (ext === 'pdf' && selectedFiles.length > 1) {
-                    const mergedPdf = await PDFDocument.create();
-                    for (const file of selectedFiles) {
-                        const buffer = await file.arrayBuffer();
-                        const pdf = await PDFDocument.load(buffer, { password });
-                        const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-                        pages.forEach(p => mergedPdf.addPage(p));
-                    }
-                    const bytes = await mergedPdf.save();
-                    // BURASI DOSYAYI İNDİRİR:
-                    download(bytes, "master_merged.pdf", "application/pdf");
-                }
-                else if (ext === 'pdf' && selectedFiles.length === 1) {
-                    const buffer = await firstFile.arrayBuffer();
-                    const pdf = await PDFDocument.load(buffer, { password });
-                    const start = parseInt(document.getElementById('startPage').value) || 1;
-                    const end = parseInt(document.getElementById('endPage').value) || 1;
-                    const newPdf = await PDFDocument.create();
-                    const pages = await newPdf.copyPages(pdf, Array.from({length: end-start+1}, (_, i) => start-1+i));
-                    pages.forEach(p => newPdf.addPage(p));
-                    const bytes = await newPdf.save();
-                    // BURASI DOSYAYI İNDİRİR:
-                    download(bytes, "master_split.pdf", "application/pdf");
+                else if (['jpg', 'jpeg', 'png'].includes(ext)) {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF();
+                    const imgData = await new Promise(r => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => r(e.target.result);
+                        reader.readAsDataURL(file);
+                    });
+                    doc.addImage(imgData, 'JPEG', 10, 10, 190, 250);
+                    doc.save("resim_export.pdf");
                 }
             } catch (err) {
-                alert("Hata: " + err.message);
+                alert("Hata oluştu: " + err.message);
             }
             actionBtn.innerText = "İNDİRİLDİ!";
-            setTimeout(() => {
-                actionBtn.innerText = "YENİ DOSYA İŞLE";
-            }, 3000);
+            setTimeout(() => { actionBtn.innerText = "YENİ DOSYA İŞLE"; }, 3000);
         };
-
-        function readFile(file) {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onload = (e) => resolve(e.target.result);
-                reader.readAsDataURL(file);
-            });
-        }
     </script>
 </body>
 </html>
