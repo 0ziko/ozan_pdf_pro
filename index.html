@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Master AI | Premium</title>
+    <title>PDF Master AI | Premium Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -11,6 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://unpkg.com/downloadjs@1.4.7/download.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0f172a; color: white; }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
@@ -23,7 +24,7 @@
 <body class="overflow-x-hidden">
     <div class="fixed top-0 -left-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
     <div class="fixed top-0 -right-4 w-72 h-72 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" style="animation-delay: 2s"></div>
-    
+
     <nav class="relative z-10 px-8 py-6 flex justify-between items-center max-w-7xl mx-auto">
         <div class="flex items-center gap-2">
             <div class="w-10 h-10 bg-gradient-to-tr from-indigo-600 to-pink-500 rounded-xl flex items-center justify-center">
@@ -31,22 +32,31 @@
             </div>
             <h1 class="text-xl font-extrabold tracking-tight">PDF<span class="text-indigo-400">MASTER</span></h1>
         </div>
-        <div class="glass px-4 py-2 rounded-full text-[10px] font-bold tracking-widest text-slate-400 uppercase">PRO EDITION</div>
+        <div class="glass px-4 py-2 rounded-full text-[10px] font-bold tracking-widest text-slate-400 uppercase">
+            OZAN'S EXCLUSIVE PRO
+        </div>
     </nav>
 
     <main class="relative z-10 max-w-4xl mx-auto mt-16 px-6 pb-20 text-center">
-        <h2 class="text-5xl font-extrabold mb-4 leading-tight">Excel ve Resimleri <br><span class="gradient-text">PDF'e Dönüştür</span></h2>
+        <h2 class="text-5xl font-extrabold mb-4 leading-tight">
+            Excel ve Resimleri <br><span class="gradient-text">Yapay Zeka Hızında</span> Çöz.
+        </h2>
+        <p class="text-slate-400 text-lg mb-12">Güvenli, hızlı ve tamamen tarayıcı tabanlı.</p>
         
-        <div class="glass rounded-[2.5rem] p-6 mt-12 transition-all">
+        <div class="glass rounded-[2.5rem] p-6 transition-all">
             <div id="dropzone" class="border-2 border-dashed border-slate-700 rounded-[2rem] p-16 transition-all cursor-pointer hover:border-indigo-500 group">
                 <input type="file" id="fileInput" multiple class="hidden" accept=".pdf,.jpg,.jpeg,.png,.xlsx,.xls">
+                
                 <div id="zoneContent">
                     <div class="w-16 h-16 bg-slate-800 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                        <svg class="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        <svg class="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
                     </div>
-                    <p class="text-lg font-bold">Dosyayı Buraya Bırak</p>
-                    <p class="text-slate-500 text-xs">Excel, Resim veya PDF</p>
+                    <p class="text-lg font-bold">Dosyaları Buraya Bırak</p>
+                    <p class="text-slate-500 text-xs">Excel, Resim veya PDF seçebilirsin</p>
                 </div>
+
                 <div id="fileInfo" class="hidden">
                     <p id="fileCountText" class="text-2xl font-black text-indigo-400 mb-2"></p>
                     <p class="text-slate-400 text-sm" id="fileNameList"></p>
@@ -55,38 +65,59 @@
 
             <div id="controls" class="mt-8 hidden">
                 <button id="actionBtn" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-5 rounded-2xl font-black text-lg shadow-xl shadow-indigo-500/20 active:scale-95 transition-all">
-                    DÖNÜŞTÜRMEYİ BAŞLAT
+                    SİHRİ BAŞLAT
                 </button>
             </div>
         </div>
+
+        <footer class="mt-20">
+            <div class="inline-flex items-center gap-3 glass px-6 py-3 rounded-full">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                </span>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Tüm Sistemler Hazır</span>
+            </div>
+        </footer>
     </main>
 
     <script>
         const fileInput = document.getElementById('fileInput');
         const dropzone = document.getElementById('dropzone');
+        const zoneContent = document.getElementById('zoneContent');
         const fileInfo = document.getElementById('fileInfo');
         const controls = document.getElementById('controls');
         const actionBtn = document.getElementById('actionBtn');
         let selectedFiles = [];
 
         dropzone.onclick = () => fileInput.click();
+        
         dropzone.ondragover = (e) => { e.preventDefault(); dropzone.classList.add('drop-zone-active'); };
         dropzone.ondragleave = () => dropzone.classList.remove('drop-zone-active');
         dropzone.ondrop = (e) => { e.preventDefault(); handleFiles(e.dataTransfer.files); };
+        
         fileInput.onchange = (e) => handleFiles(e.target.files);
 
         function handleFiles(files) {
             selectedFiles = Array.from(files);
             if (selectedFiles.length > 0) {
-                document.getElementById('zoneContent').classList.add('hidden');
+                zoneContent.classList.add('hidden');
                 fileInfo.classList.remove('hidden');
                 controls.classList.remove('hidden');
-                document.getElementById('fileCountText').innerText = `${selectedFiles.length} DOSYA HAZIR`;
+                document.getElementById('fileCountText').innerText = `${selectedFiles.length} DOSYA SEÇİLDİ`;
                 document.getElementById('fileNameList').innerText = selectedFiles[0].name;
+                actionBtn.innerText = "DÖNÜŞTÜRMEYİ BAŞLAT";
+                actionBtn.classList.replace('from-emerald-600', 'from-indigo-600');
             }
         }
 
         actionBtn.onclick = async () => {
+            // SIFIRLAMA FONKSİYONU: Eğer buton "YENİ DOSYA İŞLE" diyorsa sayfayı temizle
+            if (actionBtn.innerText === "YENİ DOSYA İŞLE") {
+                resetUI();
+                return;
+            }
+
             actionBtn.innerText = "SİHİR YAPILIYOR...";
             const file = selectedFiles[0];
             const ext = file.name.split('.').pop().toLowerCase();
@@ -100,7 +131,11 @@
 
                     const { jsPDF } = window.jspdf;
                     const doc = new jsPDF();
-                    doc.autoTable({ head: [jsonData[0]], body: jsonData.slice(1) });
+                    doc.autoTable({ 
+                        head: [jsonData[0]], 
+                        body: jsonData.slice(1),
+                        styles: { fontSize: 8 }
+                    });
                     doc.save(file.name.replace(/\.[^/.]+$/, "") + ".pdf");
                 } 
                 else if (['jpg', 'jpeg', 'png'].includes(ext)) {
@@ -112,14 +147,30 @@
                         reader.readAsDataURL(file);
                     });
                     doc.addImage(imgData, 'JPEG', 10, 10, 190, 250);
-                    doc.save("resim_export.pdf");
+                    doc.save("master_export.pdf");
+                } else {
+                    alert("Şu an sadece Excel ve Resim dosyaları desteklenmektedir.");
                 }
+                
+                // Başarı durumu: Butonu sıfırlama butonuna çevir
+                actionBtn.innerText = "YENİ DOSYA İŞLE";
+                actionBtn.classList.replace('from-indigo-600', 'from-emerald-600');
             } catch (err) {
-                alert("Hata oluştu: " + err.message);
+                alert("Hata: " + err.message);
+                actionBtn.innerText = "HATA - TEKRAR DENE";
             }
-            actionBtn.innerText = "İNDİRİLDİ!";
-            setTimeout(() => { actionBtn.innerText = "YENİ DOSYA İŞLE"; }, 3000);
         };
+
+        function resetUI() {
+            selectedFiles = [];
+            fileInput.value = "";
+            zoneContent.classList.remove('hidden');
+            fileInfo.classList.add('hidden');
+            controls.classList.add('hidden');
+            actionBtn.innerText = "SİHRİ BAŞLAT";
+            actionBtn.classList.replace('from-emerald-600', 'from-indigo-600');
+            dropzone.classList.remove('drop-zone-active');
+        }
     </script>
 </body>
 </html>
