@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Master Pro - Ozan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/downloadjs@1.4.7/download.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans min-h-screen">
+
+    <nav class="bg-white shadow-sm border-b px-8 py-4 flex justify-between items-center">
+        <h1 class="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
+            PDF Master Pro
+        </h1>
+        <p class="text-sm text-slate-500 font-medium italic">Ozan'ın PDF Platformu</p>
+    </nav>
+
+    <main class="max-w-4xl mx-auto mt-12 p-6">
+        <div class="bg-white rounded-3xl shadow-2xl p-8 border border-slate-100">
+            
+            <div id="dropzone" class="border-4 border-dashed border-indigo-100 rounded-2xl p-12 text-center transition-all hover:border-indigo-400 bg-slate-50/50 cursor-pointer">
+                <input type="file" id="fileInput" multiple class="hidden">
+                <div class="flex flex-col items-center">
+                    <span class="text-5xl mb-4">📄</span>
+                    <span class="text-indigo-600 font-bold text-lg">Dosyaları buraya sürükle veya buraya tıkla</span>
+                    <p id="fileCount" class="text-slate-400 mt-2">Henüz dosya seçilmedi</p>
+                </div>
+            </div>
+
+            <div id="passwordArea" class="hidden mt-6 bg-amber-50 p-6 rounded-xl border border-amber-200">
+                <p class="text-amber-800 font-semibold mb-2">🔒 Bu dosya şifreli. Lütfen şifreyi girin:</p>
+                <input type="password" id="pdfPassword" class="w-full p-3 rounded-lg border-2 border-amber-200 focus:border-amber-500 outline-none">
+            </div>
+
+            <div id="controls" class="mt-8 space-y-4 hidden">
+                <div class="grid grid-cols-2 gap-4" id="splitInputs">
+                    <input type="number" id="startPage" placeholder="Başlangıç Sayfası" class="border p-3 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500">
+                    <input type="number" id="endPage" placeholder="Bitiş Sayfası" class="border p-3 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <button id="actionBtn" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg hover:bg-indigo-700 transition-all shadow-lg">
+                    İŞLEMİ BAŞLAT VE İNDİR
+                </button>
+            </div>
+        </div>
+
+        <p class="text-center mt-8 text-slate-400 text-sm">
+            🔒 Dosyalarınız tamamen tarayıcıda işlenir, Cloudflare veya başka bir sunucuya yüklenmez.
+        </p>
+    </main>
+
+    <script>
+        const { PDFDocument } = PDFLib;
+        const fileInput = document.getElementById('fileInput');
+        const dropzone = document.getElementById('dropzone');
+        const fileCount = document.getElementById('fileCount');
+        const controls = document.getElementById('controls');
+        const actionBtn = document.getElementById('actionBtn');
+
+        let selectedFiles = [];
+
+        dropzone.onclick = () => fileInput.click();
+
+        fileInput.onchange = (e) => {
+            selectedFiles = Array.from(e.target.files);
+            if (selectedFiles.length > 0) {
+                fileCount.innerText = `${selectedFiles.length} dosya seçildi.`;
+                controls.classList.remove('hidden');
+                
+                const firstFile = selectedFiles[0];
+                const ext = firstFile.name.split('.').pop().toLowerCase();
+                
+                if (ext !== 'pdf') {
+                    document.getElementById('splitInputs').classList.add('hidden');
+                    actionBtn.innerText = "PDF'e Dönüştür";
+                } else if (selectedFiles.length > 1) {
+                    document.getElementById('splitInputs').classList.add('hidden');
+                    actionBtn.innerText = "PDF'leri Birleştir";
+                } else {
+                    document.getElementById('splitInputs').classList.remove('hidden');
+                    actionBtn.innerText = "Sayfaları Böl";
+                }
+            }
+        };
+
+        actionBtn.onclick = async () => {
+            const firstFile = selectedFiles[0];
+            const ext = firstFile.name.split('.').pop().toLowerCase();
+            const password = document.getElementById('pdfPassword').value;
+
+            try {
+                if (['jpg', 'jpeg', 'png'].includes(ext)) {
+                    // Resimden PDF yapma
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF();
+                    for(let i=0; i<selectedFiles.length; i++) {
+                        const imgData = await readFile(selectedFiles[i]);
+                        if(i > 0) doc.addPage();
+                        doc.addImage(imgData, 'JPEG', 10, 10, 180, 240);
+                    }
+                    doc.save("ozan_donusturulen.pdf");
+                } 
+                else if (ext === 'pdf' && selectedFiles.length > 1) {
+                    // Birleştirme
+                    const mergedPdf = await PDFDocument.create();
+                    for (const file of selectedFiles) {
+                        const buffer = await file.arrayBuffer();
+                        const pdf = await PDFDocument.load(buffer, { password });
+                        const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+                        pages.forEach(p => mergedPdf.addPage(p));
+                    }
+                    const bytes = await mergedPdf.save();
+                    download(bytes, "ozan_birlesmis.pdf", "application/pdf");
+                }
+                else if (ext === 'pdf' && selectedFiles.length === 1) {
+                    // Bölme
+                    const buffer = await firstFile.arrayBuffer();
+                    const pdf = await PDFDocument.load(buffer, { password });
+                    const start = parseInt(document.getElementById('startPage').value) || 1;
+                    const end = parseInt(document.getElementById('endPage').value) || 1;
+                    const newPdf = await PDFDocument.create();
+                    const pages = await newPdf.copyPages(pdf, Array.from({length: end-start+1}, (_, i) => start-1+i));
+                    pages.forEach(p => newPdf.addPage(p));
+                    const bytes = await newPdf.save();
+                    download(bytes, "ozan_bolunmus.pdf", "application/pdf");
+                }
+            } catch (err) {
+                if (err.message.includes('password')) {
+                    document.getElementById('passwordArea').classList.remove('hidden');
+                    alert("Bu dosya şifreli, lütfen şifreyi girin.");
+                } else {
+                    alert("Hata oluştu: " + err.message);
+                }
+            }
+        };
+
+        function readFile(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.readAsDataURL(file);
+            });
+        }
+    </script>
+</body>
+</html>
