@@ -3,59 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Master Pro - Ozan</title>
+    <title>PDF Master AI | Premium</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://unpkg.com/downloadjs@1.4.7/download.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0f172a; color: white; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .gradient-text { background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .animate-blob { animation: blob 7s infinite; }
+        @keyframes blob { 0% { transform: scale(1); } 33% { transform: scale(1.1); } 66% { transform: scale(0.9); } 100% { transform: scale(1); } }
+        .drop-zone-active { border-color: #6366f1; background: rgba(99, 102, 241, 0.1); transform: scale(1.02); }
+    </style>
 </head>
-<body class="bg-slate-50 text-slate-900 font-sans min-h-screen">
+<body class="overflow-x-hidden">
+    <div class="fixed top-0 -left-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+    <div class="fixed top-0 -right-4 w-72 h-72 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" style="animation-delay: 2s"></div>
+    <div class="fixed -bottom-8 left-20 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" style="animation-delay: 4s"></div>
 
-    <nav class="bg-white shadow-sm border-b px-8 py-4 flex justify-between items-center">
-        <h1 class="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
-            PDF Master Pro
-        </h1>
-        <p class="text-sm text-slate-500 font-medium italic">Ozan'ın PDF Platformu</p>
+    <nav class="relative z-10 px-8 py-6 flex justify-between items-center max-w-7xl mx-auto">
+        <div class="flex items-center gap-2">
+            <div class="w-10 h-10 bg-gradient-to-tr from-indigo-600 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                <span class="text-white font-black">P</span>
+            </div>
+            <h1 class="text-xl font-extrabold tracking-tight">PDF<span class="text-indigo-400">MASTER</span></h1>
+        </div>
+        <div class="glass px-4 py-2 rounded-full text-xs font-semibold tracking-widest text-slate-400 uppercase">
+            Ozan's Exclusive Edition
+        </div>
     </nav>
 
-    <main class="max-w-4xl mx-auto mt-12 p-6">
-        <div class="bg-white rounded-3xl shadow-2xl p-8 border border-slate-100">
-            
-            <div id="dropzone" class="border-4 border-dashed border-indigo-100 rounded-2xl p-12 text-center transition-all hover:border-indigo-400 bg-slate-50/50 cursor-pointer">
+    <main class="relative z-10 max-w-4xl mx-auto mt-16 px-6 pb-20">
+        <header class="text-center mb-12">
+            <h2 class="text-5xl md:text-6xl font-extrabold mb-4 leading-tight">
+                PDF İşlerini <br><span class="gradient-text">Yapay Zeka Hızında</span> Çöz.
+            </h2>
+            <p class="text-slate-400 text-lg max-w-xl mx-auto">
+                Güvenli, hızlı ve tamamen tarayıcı tabanlı. Dosyaların asla cihazından ayrılmaz.
+            </p>
+        </header>
+
+        <div class="glass rounded-[2.5rem] p-4 md:p-8 transition-all">
+            <div id="dropzone" class="relative border-2 border-dashed border-slate-700 rounded-[2rem] p-16 text-center transition-all cursor-pointer hover:bg-white/5 hover:border-slate-500 group">
                 <input type="file" id="fileInput" multiple class="hidden">
-                <div class="flex flex-col items-center">
-                    <span class="text-5xl mb-4">📄</span>
-                    <span class="text-indigo-600 font-bold text-lg">Dosyaları buraya sürükle veya buraya tıkla</span>
-                    <p id="fileCount" class="text-slate-400 mt-2">Henüz dosya seçilmedi</p>
+                <div id="zoneContent">
+                    <div class="w-20 h-20 bg-slate-800 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform shadow-2xl">
+                        <svg class="w-10 h-10 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"></path></svg>
+                    </div>
+                    <p class="text-xl font-bold mb-2">Dosyaları Buraya Bırak</p>
+                    <p class="text-slate-500 text-sm">PDF veya Resim dosyası seçebilirsin</p>
+                </div>
+                <div id="fileInfo" class="hidden">
+                    <p id="fileCountText" class="text-2xl font-black text-indigo-400"></p>
+                    <p class="text-slate-400">Dosya işlenmeye hazır</p>
                 </div>
             </div>
 
-            <div id="passwordArea" class="hidden mt-6 bg-amber-50 p-6 rounded-xl border border-amber-200">
-                <p class="text-amber-800 font-semibold mb-2">🔒 Bu dosya şifreli. Lütfen şifreyi girin:</p>
-                <input type="password" id="pdfPassword" class="w-full p-3 rounded-lg border-2 border-amber-200 focus:border-amber-500 outline-none">
+            <div id="passwordArea" class="hidden mt-6 bg-red-500/10 border border-red-500/20 p-6 rounded-2xl">
+                <p class="text-red-400 font-bold mb-3 flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
+                    Şifreli Dosya Tespit Edildi
+                </p>
+                <input type="password" id="pdfPassword" placeholder="Dosya şifresini girin..." class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-4 text-white outline-none focus:border-indigo-500 transition-colors">
             </div>
 
             <div id="controls" class="mt-8 space-y-4 hidden">
                 <div class="grid grid-cols-2 gap-4" id="splitInputs">
-                    <input type="number" id="startPage" placeholder="Başlangıç Sayfası" class="border p-3 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500">
-                    <input type="number" id="endPage" placeholder="Bitiş Sayfası" class="border p-3 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500">
+                    <div class="space-y-1">
+                        <label class="text-[10px] uppercase tracking-widest text-slate-500 ml-2">Başlangıç</label>
+                        <input type="number" id="startPage" value="1" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[10px] uppercase tracking-widest text-slate-500 ml-2">Bitiş</label>
+                        <input type="number" id="endPage" value="1" class="w-full bg-slate-900 border border-slate-700 p-4 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                    </div>
                 </div>
-                <button id="actionBtn" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-lg hover:bg-indigo-700 transition-all shadow-lg">
-                    İŞLEMİ BAŞLAT VE İNDİR
+                <button id="actionBtn" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-5 rounded-2xl font-black text-lg hover:shadow-2xl hover:shadow-indigo-500/40 transition-all active:scale-[0.98]">
+                    SİHRİ BAŞLAT
                 </button>
             </div>
         </div>
 
-        <p class="text-center mt-8 text-slate-400 text-sm">
-            🔒 Dosyalarınız tamamen tarayıcıda işlenir, Cloudflare veya başka bir sunucuya yüklenmez.
-        </p>
+        <footer class="mt-20 text-center">
+            <div class="inline-flex items-center gap-3 glass px-6 py-3 rounded-full">
+                <span class="relative flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                </span>
+                <span class="text-xs font-bold text-slate-300 uppercase tracking-tighter">Tüm Sistemler Aktif - Yerel İşleme Modu</span>
+            </div>
+        </footer>
     </main>
 
     <script>
         const { PDFDocument } = PDFLib;
         const fileInput = document.getElementById('fileInput');
         const dropzone = document.getElementById('dropzone');
-        const fileCount = document.getElementById('fileCount');
+        const zoneContent = document.getElementById('zoneContent');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileCountText = document.getElementById('fileCountText');
         const controls = document.getElementById('controls');
         const actionBtn = document.getElementById('actionBtn');
 
@@ -63,10 +111,27 @@
 
         dropzone.onclick = () => fileInput.click();
 
-        fileInput.onchange = (e) => {
-            selectedFiles = Array.from(e.target.files);
+        // Drag & Drop efektleri
+        ['dragenter', 'dragover'].forEach(name => {
+            dropzone.addEventListener(name, (e) => { e.preventDefault(); dropzone.classList.add('drop-zone-active'); });
+        });
+        ['dragleave', 'drop'].forEach(name => {
+            dropzone.addEventListener(name, (e) => { e.preventDefault(); dropzone.classList.remove('drop-zone-active'); });
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            fileInput.files = e.dataTransfer.files;
+            handleFiles(e.dataTransfer.files);
+        });
+
+        fileInput.onchange = (e) => handleFiles(e.target.files);
+
+        function handleFiles(files) {
+            selectedFiles = Array.from(files);
             if (selectedFiles.length > 0) {
-                fileCount.innerText = `${selectedFiles.length} dosya seçildi.`;
+                zoneContent.classList.add('hidden');
+                fileInfo.classList.remove('hidden');
+                fileCountText.innerText = `${selectedFiles.length} DOSYA SEÇİLDİ`;
                 controls.classList.remove('hidden');
                 
                 const firstFile = selectedFiles[0];
@@ -74,25 +139,25 @@
                 
                 if (ext !== 'pdf') {
                     document.getElementById('splitInputs').classList.add('hidden');
-                    actionBtn.innerText = "PDF'e Dönüştür";
+                    actionBtn.innerText = "PDF'E DÖNÜŞTÜR";
                 } else if (selectedFiles.length > 1) {
                     document.getElementById('splitInputs').classList.add('hidden');
-                    actionBtn.innerText = "PDF'leri Birleştir";
+                    actionBtn.innerText = "PDF'LERİ BİRLEŞTİR";
                 } else {
                     document.getElementById('splitInputs').classList.remove('hidden');
-                    actionBtn.innerText = "Sayfaları Böl";
+                    actionBtn.innerText = "SAYFALARI BÖL";
                 }
             }
-        };
+        }
 
         actionBtn.onclick = async () => {
+            actionBtn.innerText = "İŞLENİYOR...";
             const firstFile = selectedFiles[0];
             const ext = firstFile.name.split('.').pop().toLowerCase();
             const password = document.getElementById('pdfPassword').value;
 
             try {
                 if (['jpg', 'jpeg', 'png'].includes(ext)) {
-                    // Resimden PDF yapma
                     const { jsPDF } = window.jspdf;
                     const doc = new jsPDF();
                     for(let i=0; i<selectedFiles.length; i++) {
@@ -100,10 +165,9 @@
                         if(i > 0) doc.addPage();
                         doc.addImage(imgData, 'JPEG', 10, 10, 180, 240);
                     }
-                    doc.save("ozan_donusturulen.pdf");
+                    doc.save("master_export.pdf");
                 } 
                 else if (ext === 'pdf' && selectedFiles.length > 1) {
-                    // Birleştirme
                     const mergedPdf = await PDFDocument.create();
                     for (const file of selectedFiles) {
                         const buffer = await file.arrayBuffer();
@@ -112,10 +176,9 @@
                         pages.forEach(p => mergedPdf.addPage(p));
                     }
                     const bytes = await mergedPdf.save();
-                    download(bytes, "ozan_birlesmis.pdf", "application/pdf");
+                    download(bytes, "master_merged.pdf", "application/pdf");
                 }
                 else if (ext === 'pdf' && selectedFiles.length === 1) {
-                    // Bölme
                     const buffer = await firstFile.arrayBuffer();
                     const pdf = await PDFDocument.load(buffer, { password });
                     const start = parseInt(document.getElementById('startPage').value) || 1;
@@ -124,16 +187,18 @@
                     const pages = await newPdf.copyPages(pdf, Array.from({length: end-start+1}, (_, i) => start-1+i));
                     pages.forEach(p => newPdf.addPage(p));
                     const bytes = await newPdf.save();
-                    download(bytes, "ozan_bolunmus.pdf", "application/pdf");
+                    download(bytes, "master_split.pdf", "application/pdf");
                 }
             } catch (err) {
                 if (err.message.includes('password')) {
                     document.getElementById('passwordArea').classList.remove('hidden');
-                    alert("Bu dosya şifreli, lütfen şifreyi girin.");
+                    alert("Şifre gerekli!");
                 } else {
-                    alert("Hata oluştu: " + err.message);
+                    alert("Hata: " + err.message);
                 }
             }
+            actionBtn.innerText = "BAŞARILI!";
+            setTimeout(() => handleFiles(selectedFiles), 2000);
         };
 
         function readFile(file) {
